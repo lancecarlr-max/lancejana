@@ -1,0 +1,3319 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JL's Hotel — Where Every Stay Becomes a Story</title>
+
+  <!-- Google Fonts & FontAwesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    /* ==========================================================================
+       1. CORE CSS VARIABLES & THEME SETUP
+       ========================================================================== */
+    :root {
+      --gold-primary: #d4af37;
+      --gold-light: #f3e5ab;
+      --gold-dark: #aa7c11;
+      --gold-glow: rgba(212, 175, 55, 0.25);
+      
+      --bg-dark: #0a0a0c;
+      --bg-card: #141419;
+      --bg-card-hover: #1c1c24;
+      --bg-glass: rgba(18, 18, 24, 0.75);
+      --bg-glass-modal: rgba(10, 10, 14, 0.92);
+      
+      --text-main: #f5f5f7;
+      --text-muted: #a0a0ab;
+      --text-gold: #e6ca65;
+      
+      --border-gold: rgba(212, 175, 55, 0.3);
+      --border-dark: rgba(255, 255, 255, 0.08);
+      
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+      
+      --shadow-luxury: 0 20px 50px rgba(0, 0, 0, 0.6);
+      --shadow-gold: 0 10px 30px rgba(212, 175, 55, 0.15);
+      
+      --transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    }
+
+    body.light-mode {
+      --bg-dark: #f8f8fa;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f1f1f5;
+      --bg-glass: rgba(255, 255, 255, 0.85);
+      --bg-glass-modal: rgba(255, 255, 255, 0.96);
+      
+      --text-main: #1a1a20;
+      --text-muted: #6e6e7a;
+      --text-gold: #a88212;
+      
+      --border-gold: rgba(170, 124, 17, 0.4);
+      --border-dark: rgba(0, 0, 0, 0.08);
+      
+      --shadow-luxury: 0 15px 40px rgba(0, 0, 0, 0.08);
+      --shadow-gold: 0 8px 25px rgba(212, 175, 55, 0.2);
+    }
+
+    /* Reset & Base Styling */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      overflow-x: hidden;
+      line-height: 1.6;
+      transition: background-color 0.4s ease, color 0.4s ease;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, select, textarea {
+      font-family: inherit;
+      outline: none;
+      border: none;
+      background: none;
+      color: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-dark);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-gold);
+      border-radius: var(--radius-full);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--gold-primary);
+    }
+
+    /* Accessibility Support */
+    @media (prefers-reduced-motion: reduce) {
+      *, ::before, ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* ==========================================================================
+       2. CINEMATIC BACKGROUND CANVAS & OVERLAYS
+       ========================================================================== */
+    #bg-particles-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.6;
+    }
+
+    .ambient-glow {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.15;
+      animation: floatOrb 20s infinite alternate ease-in-out;
+    }
+
+    .ambient-glow-1 {
+      width: 500px;
+      height: 500px;
+      background: var(--gold-primary);
+      top: -100px;
+      right: -100px;
+    }
+
+    .ambient-glow-2 {
+      width: 600px;
+      height: 600px;
+      background: #795294;
+      bottom: -150px;
+      left: -150px;
+      animation-delay: -10s;
+    }
+
+    @keyframes floatOrb {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(60px, 80px) scale(1.15); }
+    }
+
+    /* ==========================================================================
+       3. REUSABLE UI COMPONENTS & TYPOGRAPHY
+       ========================================================================== */
+    .container {
+      width: 100%;
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .gold-gradient-text {
+      background: linear-gradient(135deg, #fff 0%, var(--gold-light) 40%, var(--gold-primary) 70%, var(--gold-dark) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+
+    .section-subtitle {
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      letter-spacing: 3px;
+      color: var(--gold-primary);
+      font-weight: 600;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .section-desc {
+      color: var(--text-muted);
+      max-width: 650px;
+      margin: 0 auto 40px auto;
+      font-size: 1.05rem;
+    }
+
+    .text-center { text-align: center; }
+
+    /* Luxury Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 32px;
+      border-radius: var(--radius-full);
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+      color: #000;
+      box-shadow: var(--shadow-gold);
+    }
+
+    .btn-gold:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px rgba(212, 175, 55, 0.35);
+      background: linear-gradient(135deg, var(--gold-light), var(--gold-primary));
+    }
+
+    .btn-outline {
+      border: 1px solid var(--border-gold);
+      color: var(--text-main);
+      background: rgba(212, 175, 55, 0.05);
+      backdrop-filter: blur(8px);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--gold-primary);
+      background: rgba(212, 175, 55, 0.15);
+      color: var(--gold-light);
+      transform: translateY(-2px);
+    }
+
+    .btn-sm {
+      padding: 8px 18px;
+      font-size: 0.85rem;
+    }
+
+    /* Cards & Glassmorphism */
+    .glass-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-dark);
+      border-radius: var(--radius-md);
+      padding: 28px;
+      backdrop-filter: blur(16px);
+      transition: var(--transition);
+    }
+
+    .glass-card:hover {
+      border-color: var(--border-gold);
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-luxury);
+    }
+
+    /* ==========================================================================
+       4. NAVIGATION BAR & HEADER
+       ========================================================================== */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      transition: var(--transition);
+      padding: 22px 0;
+    }
+
+    .header.scrolled {
+      padding: 12px 0;
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-dark);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .nav-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--font-serif);
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .logo-badge {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+      color: #000;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.2rem;
+      box-shadow: var(--shadow-gold);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      list-style: none;
+    }
+
+    .nav-link {
+      font-size: 0.88rem;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      color: var(--text-muted);
+      transition: var(--transition);
+      position: relative;
+      padding: 6px 0;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      color: var(--text-gold);
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0%;
+      height: 2px;
+      background: var(--gold-primary);
+      transition: var(--transition);
+    }
+
+    .nav-link:hover::after, .nav-link.active::after {
+      width: 100%;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--border-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-main);
+      transition: var(--transition);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .icon-btn:hover {
+      border-color: var(--gold-primary);
+      color: var(--gold-primary);
+      transform: scale(1.08);
+    }
+
+    .hamburger {
+      display: none;
+      font-size: 1.4rem;
+      color: var(--text-main);
+      cursor: pointer;
+    }
+
+    /* Mobile Nav Drawer */
+    .mobile-nav {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 300px;
+      height: 100vh;
+      background: var(--bg-card);
+      z-index: 1100;
+      padding: 80px 30px 40px 30px;
+      transition: var(--transition);
+      box-shadow: -10px 0 40px rgba(0,0,0,0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      overflow-y: auto;
+    }
+
+    .mobile-nav.active {
+      right: 0;
+    }
+
+    .mobile-nav-close {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      font-size: 1.5rem;
+    }
+
+    /* ==========================================================================
+       5. HERO SECTION
+       ========================================================================== */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 120px 0 80px 0;
+      overflow: hidden;
+    }
+
+    .hero-bg-slider {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    .hero-slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transform: scale(1.08);
+      transition: opacity 1.8s ease-in-out, transform 8s ease-out;
+    }
+
+    .hero-slide.active {
+      opacity: 0.45;
+      transform: scale(1);
+    }
+
+    .hero-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, transparent 0%, var(--bg-dark) 90%),
+                  linear-gradient(to bottom, transparent 60%, var(--bg-dark) 100%);
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2.8rem, 6.5vw, 5.2rem);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+
+    .hero-tagline {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+      color: var(--gold-light);
+      margin-bottom: 20px;
+      font-weight: 400;
+    }
+
+    .hero-desc {
+      font-size: clamp(1rem, 1.5vw, 1.2rem);
+      color: var(--text-muted);
+      max-width: 700px;
+      margin: 0 auto 36px auto;
+    }
+
+    .hero-buttons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translate(-50%, 0); }
+      40% { transform: translate(-50%, -10px); }
+      60% { transform: translate(-50%, -5px); }
+    }
+
+    /* Floating Quick Booking Bar */
+    .quick-booking-bar {
+      margin-top: 50px;
+      background: var(--bg-glass);
+      border: 1px solid var(--border-gold);
+      border-radius: var(--radius-lg);
+      padding: 20px 30px;
+      backdrop-filter: blur(20px);
+      box-shadow: var(--shadow-luxury);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) auto;
+      gap: 20px;
+      align-items: center;
+      text-align: left;
+    }
+
+    .booking-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .booking-field label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--gold-primary);
+      font-weight: 600;
+    }
+
+    .booking-field input, .booking-field select {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border-dark);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      color: var(--text-main);
+      font-size: 0.9rem;
+    }
+
+    .booking-field input:focus, .booking-field select:focus {
+      border-color: var(--gold-primary);
+    }
+
+    /* ==========================================================================
+       6. PROMOTIONAL AMENITIES SECTION (HOME + ADVERTISEMENTS)
+       ========================================================================== */
+    .section-padding {
+      padding: 100px 0;
+    }
+
+    .promo-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 80px;
+      margin-top: 40px;
+    }
+
+    .promo-card {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 50px;
+      align-items: center;
+      background: var(--bg-card);
+      border: 1px solid var(--border-dark);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      padding: 0;
+      transition: var(--transition);
+    }
+
+    .promo-card:nth-child(even) {
+      direction: rtl;
+    }
+
+    .promo-card:nth-child(even) .promo-content {
+      direction: ltr;
+    }
+
+    .promo-image-wrap {
+      position: relative;
+      height: 100%;
+      min-height: 380px;
+      overflow: hidden;
+    }
+
+    .promo-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.8s ease;
+    }
+
+    .promo-card:hover .promo-image {
+      transform: scale(1.06);
+    }
+
+    .promo-badge {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: var(--bg-glass);
+      border: 1px solid var(--border-gold);
+      padding: 6px 16px;
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold-primary);
+      backdrop-filter: blur(8px);
+    }
+
+    .promo-content {
+      padding: 50px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .promo-tag {
+      font-size: 0.85rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold-primary);
+      font-weight: 700;
+    }
+
+    .promo-headline {
+      font-family: var(--font-serif);
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      line-height: 1.25;
+    }
+
+    .promo-amenities-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 10px 0 20px 0;
+    }
+
+    .amenity-chip {
+      background: rgba(212, 175, 55, 0.08);
+      border: 1px solid var(--border-gold);
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      color: var(--text-gold);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ==========================================================================
+       7. ROOMS & SUITES SECTION
+       ========================================================================== */
+    .filter-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 40px;
+      background: var(--bg-card);
+      padding: 18px 24px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-dark);
+    }
+
+    .filter-categories {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 8px 18px;
+      border-radius: var(--radius-full);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      border: 1px solid transparent;
+      transition: var(--transition);
+    }
+
+    .filter-btn.active, .filter-btn:hover {
+      color: var(--gold-light);
+      border-color: var(--border-gold);
+      background: rgba(212, 175, 55, 0.1);
+    }
+
+    .rooms-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 30px;
+    }
+
+    .room-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-dark);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .room-card:hover {
+      border-color: var(--border-gold);
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-luxury);
+    }
+
+    .room-image-wrap {
+      position: relative;
+      height: 240px;
+      overflow: hidden;
+    }
+
+    .room-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+
+    .room-card:hover .room-image {
+      transform: scale(1.08);
+    }
+
+    .fav-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(6px);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+      z-index: 2;
+    }
+
+    .fav-btn.active, .fav-btn:hover {
+      color: #e74c3c;
+      background: rgba(255,255,255,0.9);
+    }
+
+    .room-price-badge {
+      position: absolute;
+      bottom: 16px;
+      left: 16px;
+      background: var(--bg-glass);
+      border: 1px solid var(--border-gold);
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      backdrop-filter: blur(8px);
+    }
+
+    .room-price {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--gold-light);
+    }
+
+    .room-price span {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .room-info {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .room-category {
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold-primary);
+      margin-bottom: 6px;
+    }
+
+    .room-name {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      margin-bottom: 12px;
+    }
+
+    .room-features {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding: 12px 0;
+      border-top: 1px solid var(--border-dark);
+      border-bottom: 1px solid var(--border-dark);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .room-feature-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .room-feature-item i {
+      color: var(--gold-primary);
+      width: 16px;
+    }
+
+    .room-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: auto;
+    }
+
+    .room-actions .btn {
+      flex: 1;
+    }
+
+    /* ==========================================================================
+       8. MY STAY DASHBOARD & COUNTDOWNS
+       ========================================================================== */
+    .my-stay-banner {
+      background: linear-gradient(135deg, rgba(20,20,28,0.95), rgba(30,25,15,0.95));
+      border: 1px solid var(--border-gold);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      box-shadow: var(--shadow-luxury);
+      margin-bottom: 50px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .my-stay-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-dark);
+    }
+
+    .stay-status-pill {
+      padding: 8px 20px;
+      border-radius: var(--radius-full);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .status-awaiting {
+      background: rgba(230, 126, 34, 0.2);
+      border: 1px solid #e67e22;
+      color: #e67e22;
+    }
+
+    .status-confirmed {
+      background: rgba(46, 204, 113, 0.2);
+      border: 1px solid #2ecc71;
+      color: #2ecc71;
+    }
+
+    .status-expired {
+      background: rgba(231, 76, 60, 0.2);
+      border: 1px solid #e74c3c;
+      color: #e74c3c;
+    }
+
+    .my-stay-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .countdown-box {
+      background: rgba(0,0,0,0.4);
+      border: 1px solid var(--border-gold);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      text-align: center;
+    }
+
+    .countdown-title {
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold-primary);
+      margin-bottom: 16px;
+    }
+
+    .countdown-timer {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .timer-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .timer-val {
+      font-family: var(--font-serif);
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--gold-light);
+      line-height: 1;
+    }
+
+    .timer-lbl {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    .room-assigned-card {
+      background: rgba(212, 175, 55, 0.08);
+      border: 1px dashed var(--border-gold);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .room-number-display {
+      font-family: var(--font-serif);
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--gold-light);
+    }
+
+    /* ==========================================================================
+       9. HISTORY BOOK (JOURNAL TIMELINE)
+       ========================================================================== */
+    .history-tabs {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 12px;
+      margin-bottom: 30px;
+      border-bottom: 1px solid var(--border-dark);
+    }
+
+    .history-tab {
+      padding: 10px 22px;
+      border-radius: var(--radius-full);
+      background: var(--bg-card);
+      border: 1px solid var(--border-dark);
+      font-size: 0.9rem;
+      white-space: nowrap;
+      transition: var(--transition);
+    }
+
+    .history-tab.active, .history-tab:hover {
+      background: rgba(212, 175, 55, 0.15);
+      border-color: var(--border-gold);
+      color: var(--gold-light);
+    }
+
+    .history-timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      position: relative;
+    }
+
+    .history-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-dark);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 24px;
+      align-items: center;
+      transition: var(--transition);
+    }
+
+    .history-card:hover {
+      border-color: var(--border-gold);
+      transform: translateX(6px);
+    }
+
+    .history-icon-badge {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid var(--border-gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold-primary);
+      font-size: 1.2rem;
+    }
+
+    .history-details h4 {
+      font-family: var(--font-serif);
+      font-size: 1.2rem;
+      margin-bottom: 4px;
+    }
+
+    .history-meta {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .history-price {
+      font-family: var(--font-serif);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--gold-light);
+      text-align: right;
+    }
+
+    /* ==========================================================================
+       10. SERVICES, DINING, SPA & EVENTS SECTIONS
+       ========================================================================== */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .service-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-dark);
+      border-radius: var(--radius-md);
+      padding: 30px 24px;
+      text-align: center;
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .service-card:hover {
+      border-color: var(--border-gold);
+      transform: translateY(-6px);
+    }
+
+    .service-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid var(--border-gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold-primary);
+      font-size: 1.6rem;
+      margin-bottom: 20px;
+    }
+
+    /* Dining & Room Service Cart Modal Layout */
+    .dining-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-dark);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+
+    .dining-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      min-height: 300px;
+    }
+
+    .dining-info {
+      padding: 36px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* ==========================================================================
+       11. MILESTONE TIMELINE (ABOUT US)
+       ========================================================================== */
+    .timeline {
+      position: relative;
+      max-width: 900px;
+      margin: 50px auto 0 auto;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 2px;
+      background: var(--border-gold);
+      transform: translateX(-50%);
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 50px;
+      width: 50%;
+      padding: 0 40px;
+    }
+
+    .timeline-item:nth-child(odd) {
+      left: 0;
+      text-align: right;
+    }
+
+    .timeline-item:nth-child(even) {
+      left: 50%;
+      text-align: left;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      top: 0;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--gold-primary);
+      border: 4px solid var(--bg-dark);
+      box-shadow: 0 0 10px var(--gold-primary);
+    }
+
+    .timeline-item:nth-child(odd) .timeline-dot {
+      right: -9px;
+    }
+
+    .timeline-item:nth-child(even) .timeline-dot {
+      left: -9px;
+    }
+
+    .timeline-date {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--gold-light);
+      margin-bottom: 8px;
+    }
+
+    /* ==========================================================================
+       12. GALLERY & LIGHTBOX
+       ========================================================================== */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .gallery-item {
+      position: relative;
+      height: 250px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.1);
+    }
+
+    .gallery-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      opacity: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold-light);
+      font-size: 1.5rem;
+      transition: var(--transition);
+    }
+
+    .gallery-item:hover .gallery-overlay {
+      opacity: 1;
+    }
+
+    /* Lightbox Modal */
+    .lightbox-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.92);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    .lightbox-modal.active {
+      display: flex;
+    }
+
+    .lightbox-content {
+      max-width: 90%;
+      max-height: 85vh;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-gold);
+    }
+
+    /* ==========================================================================
+       13. MODALS & FORMS (AUTH, BOOKING, PAYMENT)
+       ========================================================================== */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(12px);
+      z-index: 1500;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .modal-card {
+      background: var(--bg-glass-modal);
+      border: 1px solid var(--border-gold);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 550px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 40px;
+      position: relative;
+      box-shadow: var(--shadow-luxury);
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+    }
+
+    .modal-overlay.active .modal-card {
+      transform: translateY(0);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 1.4rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .modal-close:hover {
+      color: var(--gold-primary);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--gold-primary);
+      font-weight: 600;
+    }
+
+    .form-control {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border-dark);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      color: var(--text-main);
+      font-size: 0.95rem;
+      transition: var(--transition);
+    }
+
+    .form-control:focus {
+      border-color: var(--gold-primary);
+      background: rgba(255,255,255,0.08);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    /* Dynamic Toast Notification */
+    .toast-container {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 3000;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      pointer-events: none;
+    }
+
+    .toast {
+      pointer-events: auto;
+      background: var(--bg-card);
+      border: 1px solid var(--border-gold);
+      border-left: 4px solid var(--gold-primary);
+      border-radius: var(--radius-md);
+      padding: 16px 24px;
+      box-shadow: var(--shadow-luxury);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-width: 300px;
+      animation: slideInRight 0.4s ease forwards;
+    }
+
+    @keyframes slideInRight {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    /* ==========================================================================
+       14. FOOTER
+       ========================================================================== */
+    .footer {
+      background: #050507;
+      border-top: 1px solid var(--border-dark);
+      padding: 80px 0 30px 0;
+      margin-top: 100px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr repeat(3, 1fr);
+      gap: 40px;
+      margin-bottom: 60px;
+    }
+
+    .footer-about p {
+      color: var(--text-muted);
+      margin: 16px 0;
+      font-size: 0.95rem;
+      max-width: 320px;
+    }
+
+    .footer-title {
+      font-family: var(--font-serif);
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      color: var(--gold-light);
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-links a {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      transition: var(--transition);
+    }
+
+    .footer-links a:hover {
+      color: var(--gold-primary);
+      padding-left: 5px;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid var(--border-dark);
+      padding-top: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    /* ==========================================================================
+       15. MOBILE RESPONSIVE MEDIA QUERIES
+       ========================================================================== */
+    @media (max-width: 1024px) {
+      .promo-card {
+        grid-template-columns: 1fr;
+      }
+      .promo-card:nth-child(even) {
+        direction: ltr;
+      }
+      .dining-card {
+        grid-template-columns: 1fr;
+      }
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .my-stay-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links, .nav-actions .btn {
+        display: none;
+      }
+      .hamburger {
+        display: block;
+      }
+      .quick-booking-bar {
+        grid-template-columns: 1fr;
+      }
+      .timeline::before {
+        left: 20px;
+      }
+      .timeline-item {
+        width: 100%;
+        padding-left: 50px;
+        padding-right: 0;
+        text-align: left !important;
+      }
+      .timeline-item:nth-child(even) {
+        left: 0;
+      }
+      .timeline-dot {
+        left: 11px !important;
+      }
+      .history-card {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      .history-icon-badge {
+        margin: 0 auto;
+      }
+      .history-price {
+        text-align: center;
+      }
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient Animated Background Canvas -->
+  <canvas id="bg-particles-canvas"></canvas>
+  <div class="ambient-glow ambient-glow-1"></div>
+  <div class="ambient-glow ambient-glow-2"></div>
+
+  <!-- Dynamic Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- HEADER / NAVIGATION -->
+  <header class="header" id="main-header">
+    <div class="container nav-container">
+      <a href="#home" class="logo">
+        <div class="logo-badge">JL</div>
+        <span>JL'S HOTEL</span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#home" class="nav-link active">Home</a></li>
+        <li><a href="#rooms" class="nav-link">Rooms</a></li>
+        <li><a href="#services" class="nav-link">Services</a></li>
+        <li><a href="#dining" class="nav-link">Dining</a></li>
+        <li><a href="#spa" class="nav-link">Spa</a></li>
+        <li><a href="#events" class="nav-link">Events</a></li>
+        <li><a href="#about" class="nav-link">About Us</a></li>
+        <li><a href="#gallery" class="nav-link">Gallery</a></li>
+        <li class="auth-required-nav" style="display:none;"><a href="#history" class="nav-link">History</a></li>
+        <li class="auth-required-nav" style="display:none;"><a href="#my-stay" class="nav-link">My Stay</a></li>
+        <li><a href="#contact" class="nav-link">Contact</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button class="icon-btn" id="theme-toggle" title="Toggle Theme">
+          <i class="fa-solid me-moon"></i>
+        </button>
+        <button class="icon-btn" id="search-trigger" title="Search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+
+        <!-- Auth Toggle State Buttons -->
+        <div id="nav-auth-container">
+          <button class="btn btn-outline btn-sm" onclick="openAuthModal('login')">Sign In</button>
+        </div>
+
+        <button class="btn btn-gold btn-sm" onclick="triggerBookingFlow()">Book Now</button>
+        
+        <div class="hamburger" id="hamburger-btn">
+          <i class="fa-solid fa-bars"></i>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MOBILE NAVIGATION DRAWER -->
+  <div class="mobile-nav" id="mobile-nav-drawer">
+    <div class="mobile-nav-close" id="mobile-nav-close"><i class="fa-solid fa-xmark"></i></div>
+    <div class="logo" style="margin-bottom: 20px;">
+      <div class="logo-badge">JL</div>
+      <span>JL'S HOTEL</span>
+    </div>
+    <a href="#home" class="nav-link mobile-link">Home</a>
+    <a href="#rooms" class="nav-link mobile-link">Rooms</a>
+    <a href="#services" class="nav-link mobile-link">Services</a>
+    <a href="#dining" class="nav-link mobile-link">Dining</a>
+    <a href="#spa" class="nav-link mobile-link">Spa</a>
+    <a href="#events" class="nav-link mobile-link">Events</a>
+    <a href="#about" class="nav-link mobile-link">About Us</a>
+    <a href="#gallery" class="nav-link mobile-link">Gallery</a>
+    <a href="#history" class="nav-link mobile-link auth-required-nav" style="display:none;">History Book</a>
+    <a href="#my-stay" class="nav-link mobile-link auth-required-nav" style="display:none;">My Stay</a>
+    <a href="#contact" class="nav-link mobile-link">Contact</a>
+    <div style="margin-top: 20px;" id="mobile-auth-container">
+      <button class="btn btn-gold" style="width: 100%;" onclick="openAuthModal('login')">Sign In / Register</button>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT WRAPPER -->
+  <main>
+
+    <!-- HERO SECTION -->
+    <section id="home" class="hero">
+      <div class="hero-bg-slider">
+        <div class="hero-slide active" style="background-image: url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1920&q=80');"></div>
+        <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1920&q=80');"></div>
+        <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1920&q=80');"></div>
+      </div>
+      <div class="hero-overlay"></div>
+
+      <div class="container hero-content">
+        <span class="section-subtitle">A World of Refined Opulence</span>
+        <h1 class="hero-title gold-gradient-text">JL's Hotel</h1>
+        <p class="hero-tagline">"Where Every Stay Becomes a Story."</p>
+        <p class="hero-desc">Experience refined comfort, warm hospitality, and unforgettable moments in one extraordinary destination.</p>
+
+        <div class="hero-buttons">
+          <button class="btn btn-gold" onclick="triggerBookingFlow()">
+            <i class="fa-solid fa-calendar-check"></i> Book Your Stay
+          </button>
+          <a href="#rooms" class="btn btn-outline">
+            <i class="fa-solid fa-bed"></i> Explore Rooms
+          </a>
+        </div>
+
+        <!-- Floating Quick Booking Bar -->
+        <div class="quick-booking-bar">
+          <div class="booking-field">
+            <label><i class="fa-solid fa-calendar-days"></i> Check-In</label>
+            <input type="date" id="hero-checkin">
+          </div>
+          <div class="booking-field">
+            <label><i class="fa-solid fa-calendar-days"></i> Check-Out</label>
+            <input type="date" id="hero-checkout">
+          </div>
+          <div class="booking-field">
+            <label><i class="fa-solid fa-user-group"></i> Guests</label>
+            <select id="hero-guests">
+              <option value="1">1 Guest</option>
+              <option value="2" selected>2 Guests</option>
+              <option value="3">3 Guests</option>
+              <option value="4">4+ Guests</option>
+            </select>
+          </div>
+          <button class="btn btn-gold" onclick="searchRoomsFromHero()">Search Availability</button>
+        </div>
+      </div>
+
+      <div class="scroll-indicator">
+        <span>Scroll To Explore</span>
+        <i class="fa-solid fa-chevron-down"></i>
+      </div>
+    </section>
+
+    <!-- PROMOTIONAL AMENITIES SECTION (HOME ADVERTISEMENTS) -->
+    <section class="section-padding container">
+      <div class="text-center">
+        <span class="section-subtitle">Curated Luxuries</span>
+        <h2 class="section-title gold-gradient-text">Promotional Experiences</h2>
+        <p class="section-desc">Discover our world-class amenities designed to elevate your stay into an extraordinary story.</p>
+      </div>
+
+      <div class="promo-grid">
+        <!-- PROMO 1: RELAX -->
+        <div class="promo-card">
+          <div class="promo-image-wrap">
+            <img src="https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&w=1200&q=80" alt="Infinity Pool" class="promo-image">
+            <span class="promo-badge">RELAX</span>
+          </div>
+          <div class="promo-content">
+            <span class="promo-tag">Acoustic Serenity</span>
+            <h3 class="promo-headline">Escape Into Comfort</h3>
+            <p style="color: var(--text-muted);">Relax beside our cliffside infinity pool while enjoying panoramic ocean horizons, or retreat to our temperature-controlled kids pool, jacuzzi, and steam sanctuary.</p>
+            <div class="promo-amenities-tags">
+              <span class="amenity-chip"><i class="fa-solid fa-water-ladder"></i> Infinity Pool</span>
+              <span class="amenity-chip"><i class="fa-solid fa-hot-tub-person"></i> Jacuzzi</span>
+              <span class="amenity-chip"><i class="fa-solid fa-child"></i> Kids Pool</span>
+              <span class="amenity-chip"><i class="fa-solid fa-bath"></i> Sauna & Steam</span>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="scrollToSection('spa')">Explore Sanctuary</button>
+          </div>
+        </div>
+
+        <!-- PROMO 2: DINE -->
+        <div class="promo-card">
+          <div class="promo-image-wrap">
+            <img src="https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&w=1200&q=80" alt="Fine Dining" class="promo-image">
+            <span class="promo-badge">DINE</span>
+          </div>
+          <div class="promo-content">
+            <span class="promo-tag">Culinary Artistry</span>
+            <h3 class="promo-headline">Taste Something Extraordinary</h3>
+            <p style="color: var(--text-muted);">Immerse your senses in Michelin-starred gastronomic journeys at our Signature Restaurant, enjoy artisan roasts in the Garden Café, or savor crafted mixology at the Rooftop Lounge.</p>
+            <div class="promo-amenities-tags">
+              <span class="amenity-chip"><i class="fa-solid fa-utensils"></i> Fine Dining</span>
+              <span class="amenity-chip"><i class="fa-solid fa-mug-saucer"></i> Garden Café</span>
+              <span class="amenity-chip"><i class="fa-solid fa-martini-glass-citrus"></i> Rooftop Lounge</span>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="scrollToSection('dining')">Explore Dining</button>
+          </div>
+        </div>
+
+        <!-- PROMO 3: UNWIND -->
+        <div class="promo-card">
+          <div class="promo-image-wrap">
+            <img src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=1200&q=80" alt="Wellness Spa" class="promo-image">
+            <span class="promo-badge">UNWIND</span>
+          </div>
+          <div class="promo-content">
+            <span class="promo-tag">Holistic Renewal</span>
+            <h3 class="promo-headline">Your Wellness, Our Priority</h3>
+            <p style="color: var(--text-muted);">Rejuvenate your body and mind at our holistic spa or stay peak-conditioned in our state-of-the-art Fitness Center equipped with private training concierges.</p>
+            <div class="promo-amenities-tags">
+              <span class="amenity-chip"><i class="fa-solid fa-spa"></i> Luxury Spa</span>
+              <span class="amenity-chip"><i class="fa-solid fa-dumbbell"></i> Fitness Center</span>
+              <span class="amenity-chip"><i class="fa-solid fa-heart-pulse"></i> Wellness Retreat</span>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="scrollToSection('spa')">Explore Spa</button>
+          </div>
+        </div>
+
+        <!-- PROMO 4: CELEBRATE -->
+        <div class="promo-card">
+          <div class="promo-image-wrap">
+            <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=1200&q=80" alt="Grand Ballroom" class="promo-image">
+            <span class="promo-badge">CELEBRATE</span>
+          </div>
+          <div class="promo-content">
+            <span class="promo-tag">Unforgettable Gatherings</span>
+            <h3 class="promo-headline">Moments Worth Remembering</h3>
+            <p style="color: var(--text-muted);">From grand gala celebrations in our Grand Ballroom to executive summits in sophisticated conference suites and lush outdoor garden weddings.</p>
+            <div class="promo-amenities-tags">
+              <span class="amenity-chip"><i class="fa-solid fa-champagne-glasses"></i> Grand Ballroom</span>
+              <span class="amenity-chip"><i class="fa-solid fa-briefcase"></i> Business Center</span>
+              <span class="amenity-chip"><i class="fa-solid fa-tree"></i> Botanical Garden</span>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="scrollToSection('events')">Explore Events</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MY STAY DASHBOARD (SHOWS WHEN USER HAS ACTIVE OR UNPAID STAY) -->
+    <section id="my-stay" class="section-padding container" style="display:none;">
+      <div class="text-center">
+        <span class="section-subtitle">Guest Dashboard</span>
+        <h2 class="section-title gold-gradient-text">My Stay Information</h2>
+        <p class="section-desc">Track your current reservation, complete payment countdowns, or view check-in timelines.</p>
+      </div>
+
+      <div id="my-stay-content">
+        <!-- Rendered via JavaScript dynamically -->
+      </div>
+    </section>
+
+    <!-- ROOMS & SUITES SECTION -->
+    <section id="rooms" class="section-padding container">
+      <div class="text-center">
+        <span class="section-subtitle">Accommodations</span>
+        <h2 class="section-title gold-gradient-text">Rooms & Royal Suites</h2>
+        <p class="section-desc">Each room is designed as a private sanctuary featuring bespoke furnishings, marble baths, and majestic views.</p>
+      </div>
+
+      <!-- Room Filter & Search Control -->
+      <div class="filter-bar">
+        <div class="filter-categories" id="room-category-filters">
+          <button class="filter-btn active" data-cat="All">All Rooms</button>
+          <button class="filter-btn" data-cat="Standard">Standard</button>
+          <button class="filter-btn" data-cat="Deluxe">Deluxe</button>
+          <button class="filter-btn" data-cat="Executive">Executive</button>
+          <button class="filter-btn" data-cat="Suites">Suites</button>
+          <button class="filter-btn" data-cat="Family">Family</button>
+          <button class="filter-btn" data-cat="Villas">Villas</button>
+          <button class="filter-btn" data-cat="Premium">Premium</button>
+        </div>
+
+        <div style="display:flex; gap: 10px;">
+          <select id="room-sort" class="form-control" style="width: auto;" onchange="renderRooms()">
+            <option value="recommended">Sort: Recommended</option>
+            <option value="low-high">Price: Low to High</option>
+            <option value="high-low">Price: High to Low</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Rooms Grid Container -->
+      <div class="rooms-grid" id="rooms-grid-container">
+        <!-- 12 Room Cards Rendered via JS -->
+      </div>
+    </section>
+
+    <!-- SERVICES SECTION -->
+    <section id="services" class="section-padding container">
+      <div class="text-center">
+        <span class="section-subtitle">Hospitality Redefined</span>
+        <h2 class="section-title gold-gradient-text">24/7 Hotel Services</h2>
+        <p class="section-desc">Request effortless room service, private chauffeurs, or housekeeping with instant confirmation.</p>
+      </div>
+
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-icon"><i class="fa-solid fa-headset"></i></div>
+          <h3 class="room-name">24/7 Concierge</h3>
+          <p style="color:var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Personal assistance for booking tours, local recommendations, and private requests.</p>
+          <button class="btn btn-outline btn-sm" onclick="openServiceModal('24/7 Concierge')">Request Assistance</button>
+        </div>
+
+        <div class="service-card">
+          <div class="service-icon"><i class="fa-solid fa-broom"></i></div>
+          <h3 class="room-name">Housekeeping</h3>
+          <p style="color:var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Daily turn-down, fresh linen replacements, and bespoke aromatic room scents.</p>
+          <button class="btn btn-outline btn-sm" onclick="openServiceModal('Housekeeping')">Request Service</button>
+        </div>
+
+        <div class="service-card">
+          <div class="service-icon"><i class="fa-solid fa-shirt"></i></div>
+          <h3 class="room-name">Laundry & Pressing</h3>
+          <p style="color:var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Express same-day dry cleaning, delicate garment care, and steam pressing.</p>
+          <button class="btn btn-outline btn-sm" onclick="openServiceModal('Laundry')">Order Laundry</button>
+        </div>
+
+        <div class="service-card">
+          <div class="service-icon"><i class="fa-solid fa-plane-arrival"></i></div>
+          <h3 class="room-name">Airport Transfer</h3>
+          <p style="color:var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Luxury Maybach or private helicopter airport pickup and drop-off service.</p>
+          <button class="btn btn-outline btn-sm" onclick="openServiceModal('Airport Transfer')">Book Transfer</button>
+        </div>
+
+        <div class="service-card">
+          <div class="service-icon"><i class="fa-solid fa-suitcase-rolling"></i></div>
+          <h3 class="room-name">Luggage Assistance</h3>
+          <p style="color:var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Prompt porter assistance for effortless arrival and departure handling.</p>
+          <button class="btn btn-outline btn-sm" onclick="openServiceModal('Luggage Assistance')">Request Porter</button>
+        </div>
+
+        <div class="service-card">
+          <div class="service-icon"><i class="fa-solid fa-bell"></i></div>
+          <h3 class="room-name">Wake-Up Call</h3>
+          <p style="color:var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Customized wake-up call paired with complimentary morning tea or espresso.</p>
+          <button class="btn btn-outline btn-sm" onclick="openServiceModal('Wake-Up Call')">Schedule Call</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- DINING & ROOM SERVICE SECTION -->
+    <section id="dining" class="section-padding container">
+      <div class="text-center">
+        <span class="section-subtitle">Gastronomy</span>
+        <h2 class="section-title gold-gradient-text">Culinary Venues & Room Service</h2>
+        <p class="section-desc">Savor masterfully crafted dining or order in-room dining directly to your suite.</p>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap: 40px;">
+        <div class="dining-card">
+          <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80" alt="Restaurant" class="dining-image">
+          <div class="dining-info">
+            <span class="promo-tag">Signature Restaurant</span>
+            <h3 class="promo-headline">The JL Signature Restaurant</h3>
+            <p style="color:var(--text-muted); margin: 12px 0 20px 0;">An extraordinary fine-dining venue serving modern European-Asian fusion curated by celebrity chefs.</p>
+            <p style="font-size: 0.85rem; color:var(--gold-light); margin-bottom: 20px;"><i class="fa-solid fa-clock"></i> Hours: 6:00 PM – 11:00 PM</p>
+            <div style="display:flex; gap: 12px;">
+              <button class="btn btn-gold btn-sm" onclick="openDiningReservation('The JL Signature Restaurant')">Reserve Table</button>
+              <button class="btn btn-outline btn-sm" onclick="openRoomServiceModal()">In-Room Dining Menu</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="dining-card">
+          <img src="https://images.unsplash.com/photo-1572116469696-31de0f17cc34?auto=format&fit=crop&w=800&q=80" alt="Rooftop Lounge" class="dining-image">
+          <div class="dining-info">
+            <span class="promo-tag">Sky Lounge</span>
+            <h3 class="promo-headline">Sunset Rooftop Lounge</h3>
+            <p style="color:var(--text-muted); margin: 12px 0 20px 0;">Bespoke cocktails, rare vintages, and small bites set against mesmerizing golden sunsets.</p>
+            <p style="font-size: 0.85rem; color:var(--gold-light); margin-bottom: 20px;"><i class="fa-solid fa-clock"></i> Hours: 4:00 PM – 2:00 AM</p>
+            <div style="display:flex; gap: 12px;">
+              <button class="btn btn-gold btn-sm" onclick="openDiningReservation('Sunset Rooftop Lounge')">Reserve Table</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SPA & WELLNESS SECTION -->
+    <section id="spa" class="section-padding container">
+      <div class="text-center">
+        <span class="section-subtitle">Sanctuary of Tranquility</span>
+        <h2 class="section-title gold-gradient-text">Spa & Wellness Rituals</h2>
+        <p class="section-desc">Escape into total bliss with specialized body massages, glowing facials, and private hydrotherapy.</p>
+      </div>
+
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-icon"><i class="fa-solid fa-spa"></i></div>
+          <h3 class="room-name">Full Body Aromatherapy</h3>
+          <p style="color:var(--gold-light); font-weight:700; margin: 6px 0;">₱3,500 / 60 Mins</p>
+          <p style="color:var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Essential organic botanical oils combined with gentle deep-tissue strokes.</p>
+          <button class="btn btn-gold btn-sm" onclick="openSpaBookingModal('Full Body Aromatherapy', 3500)">Book Treatment</button>
+        </div>
+
+        <div class="service-card">
+          <div class="service-icon"><i class="fa-solid fa-hot-tub-person"></i></div>
+          <h3 class="room-name">Couples Hydrotherapy Spa</h3>
+          <p style="color:var(--gold-light); font-weight:700; margin: 6px 0;">₱6,800 / 90 Mins</p>
+          <p style="color:var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Private thermal soak with champagne, rose bath, and dual therapist massage.</p>
+          <button class="btn btn-gold btn-sm" onclick="openSpaBookingModal('Couples Hydrotherapy Spa', 6800)">Book Treatment</button>
+        </div>
+
+        <div class="service-card">
+          <div class="service-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+          <h3 class="room-name">Royal Gold Facial</h3>
+          <p style="color:var(--gold-light); font-weight:700; margin: 6px 0;">₱4,200 / 60 Mins</p>
+          <p style="color:var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">24K gold leaf anti-aging facial treatment for immediate radiant glow.</p>
+          <button class="btn btn-gold btn-sm" onclick="openSpaBookingModal('Royal Gold Facial', 4200)">Book Treatment</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- EVENTS & CELEBRATIONS SECTION -->
+    <section id="events" class="section-padding container">
+      <div class="text-center">
+        <span class="section-subtitle">Exquisite Gatherings</span>
+        <h2 class="section-title gold-gradient-text">Events & Celebrations</h2>
+        <p class="section-desc">Host life’s most prestigious celebrations, weddings, and corporate summits with our event team.</p>
+      </div>
+
+      <div class="glass-card" style="max-width: 800px; margin: 0 auto;">
+        <h3 class="promo-headline text-center" style="margin-bottom: 20px;">Submit Event Inquiry</h3>
+        <form id="event-inquiry-form" onsubmit="handleEventInquirySubmit(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Event Type</label>
+              <select class="form-control" id="event-type" required>
+                <option value="Wedding">Luxury Wedding</option>
+                <option value="Birthday / Gala">Birthday / Gala Celebration</option>
+                <option value="Corporate Summit">Corporate Summit / Conference</option>
+                <option value="Private Dinner">Private Dining Party</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Estimated Guests</label>
+              <input type="number" class="form-control" id="event-guests" placeholder="e.g. 150" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Preferred Date</label>
+              <input type="date" class="form-control" id="event-date" required>
+            </div>
+            <div class="form-group">
+              <label>Estimated Budget (PHP)</label>
+              <input type="text" class="form-control" id="event-budget" placeholder="₱100,000+" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Special Requests / Vision</label>
+            <textarea class="form-control" id="event-notes" rows="3" placeholder="Tell us about your event details..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-gold" style="width: 100%;">Submit Inquiry</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ABOUT US & MILESTONE TIMELINE -->
+    <section id="about" class="section-padding container">
+      <div class="text-center">
+        <span class="section-subtitle">Our Heritage</span>
+        <h2 class="section-title gold-gradient-text">About JL's Hotel</h2>
+        <p class="section-desc">JL's Hotel began as a family-inspired vision centered around comfort, hospitality, and meaningful guest experiences.</p>
+      </div>
+
+      <div class="glass-card" style="margin-bottom: 60px;">
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px;">
+          <div>
+            <h3 style="font-family: var(--font-serif); color:var(--gold-light); margin-bottom: 10px;"><i class="fa-solid fa-bullseye"></i> Our Mission</h3>
+            <p style="color:var(--text-muted); font-size: 0.95rem;">"To provide every guest with a comfortable, elegant, and memorable stay through genuine hospitality and world-class care."</p>
+          </div>
+          <div>
+            <h3 style="font-family: var(--font-serif); color:var(--gold-light); margin-bottom: 10px;"><i class="fa-solid fa-eye"></i> Our Vision</h3>
+            <p style="color:var(--text-muted); font-size: 0.95rem;">"To become a trusted destination where exceptional hospitality meets meaningful experiences, inspiring stories for generations."</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Animated Milestone Timeline -->
+      <div class="text-center">
+        <h3 class="section-title gold-gradient-text" style="font-size: 2rem;">Our Journey Through Time</h3>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">2018</div>
+          <h4 style="font-family:var(--font-serif);">The Beginning</h4>
+          <p style="color:var(--text-muted); font-size:0.85rem;">Foundations were laid for a premier luxury boutique stay in Davao.</p>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">2020</div>
+          <h4 style="font-family:var(--font-serif);">Growing the Dream</h4>
+          <p style="color:var(--text-muted); font-size:0.85rem;">Expanded with beachfront infinity pools and signature Michelin dining venues.</p>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">2022</div>
+          <h4 style="font-family:var(--font-serif);">A New Standard</h4>
+          <p style="color:var(--text-muted); font-size:0.85rem;">Recognized as a 5-Star Luxury Destination for international guests.</p>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">2024</div>
+          <h4 style="font-family:var(--font-serif);">Becoming a Destination</h4>
+          <p style="color:var(--text-muted); font-size:0.85rem;">Integrated smart guest management portals and wellness spa sanctuaries.</p>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">2026</div>
+          <h4 style="font-family:var(--font-serif);">The Next Chapter</h4>
+          <p style="color:var(--text-muted); font-size:0.85rem;">Launching the digital Guest History Book and real-time stay experience portal.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- GALLERY SECTION -->
+    <section id="gallery" class="section-padding container">
+      <div class="text-center">
+        <span class="section-subtitle">Visual Splendor</span>
+        <h2 class="section-title gold-gradient-text">Photo Gallery</h2>
+        <p class="section-desc">Take a glimpse inside our opulent suites, tranquil gardens, and fine dining spaces.</p>
+      </div>
+
+      <div class="gallery-grid">
+        <div class="gallery-item" onclick="openLightbox('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80')">
+          <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=600&q=80" alt="Lobby Exterior">
+          <div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox('https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1200&q=80')">
+          <img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=600&q=80" alt="Luxury Suite">
+          <div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox('https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&w=1200&q=80')">
+          <img src="https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&w=600&q=80" alt="Infinity Pool">
+          <div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80')">
+          <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80" alt="Dining Room">
+          <div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HISTORY BOOK SECTION (SHOWS WHEN USER IS LOGGED IN) -->
+    <section id="history" class="section-padding container" style="display:none;">
+      <div class="text-center">
+        <span class="section-subtitle">Digital Guest Journal</span>
+        <h2 class="section-title gold-gradient-text">History Book</h2>
+        <p class="section-desc">A complete archive of your luxury stays, dining reservations, spa purchases, and service history.</p>
+      </div>
+
+      <!-- History Filter Tabs -->
+      <div class="history-tabs" id="history-filter-tabs">
+        <button class="history-tab active" onclick="filterHistory('All')">All Activity</button>
+        <button class="history-tab" onclick="filterHistory('Rooms')">Room Stays</button>
+        <button class="history-tab" onclick="filterHistory('Dining')">Dining Reservations</button>
+        <button class="history-tab" onclick="filterHistory('Room Service')">Room Service</button>
+        <button class="history-tab" onclick="filterHistory('Spa')">Spa Treatments</button>
+        <button class="history-tab" onclick="filterHistory('Services')">Hotel Services</button>
+        <button class="history-tab" onclick="filterHistory('Events')">Events</button>
+      </div>
+
+      <div class="history-timeline" id="history-items-container">
+        <!-- History Items Dynamic JS Rendering -->
+      </div>
+    </section>
+
+    <!-- MY ACCOUNT SECTION (USER PROFILE) -->
+    <section id="my-account" class="section-padding container" style="display:none;">
+      <div class="text-center">
+        <span class="section-subtitle">Guest Profile</span>
+        <h2 class="section-title gold-gradient-text">My Account</h2>
+      </div>
+
+      <div class="glass-card" style="max-width: 600px; margin: 0 auto;">
+        <div style="display:flex; align-items:center; gap:20px; margin-bottom: 30px;">
+          <div style="width:70px; height:70px; border-radius:50%; background:var(--gold-primary); color:#000; font-size:2rem; font-weight:800; display:flex; align-items:center; justify-content:center;" id="account-avatar-initials">
+            JL
+          </div>
+          <div>
+            <h3 style="font-family:var(--font-serif); font-size:1.5rem;" id="account-display-name">Guest Name</h3>
+            <p style="color:var(--text-muted); font-size:0.9rem;" id="account-display-email">guest@example.com</p>
+          </div>
+        </div>
+
+        <form id="profile-edit-form" onsubmit="handleProfileUpdate(event)">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" class="form-control" id="profile-name" required>
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="text" class="form-control" id="profile-phone" required>
+          </div>
+          <div style="display:flex; gap:12px; margin-top:20px;">
+            <button type="submit" class="btn btn-gold" style="flex:1;">Save Profile</button>
+            <button type="button" class="btn btn-outline" onclick="logoutUser()">Logout</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact" class="section-padding container">
+      <div class="text-center">
+        <span class="section-subtitle">At Your Service</span>
+        <h2 class="section-title gold-gradient-text">Contact Concierge</h2>
+        <p class="section-desc">Our dedicated team is available 24/7 to assist with inquiries or special reservations.</p>
+      </div>
+
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px;">
+        <div class="glass-card">
+          <h3 style="font-family:var(--font-serif); margin-bottom: 20px; color:var(--gold-light);">Contact Details</h3>
+          <p style="margin-bottom: 14px; color:var(--text-muted);"><i class="fa-solid fa-phone" style="color:var(--gold-primary); width:24px;"></i> 09151897504</p>
+          <p style="margin-bottom: 14px; color:var(--text-muted);"><i class="fa-solid fa-envelope" style="color:var(--gold-primary); width:24px;"></i> concierge@jlshotel.com</p>
+          <p style="margin-bottom: 14px; color:var(--text-muted);"><i class="fa-solid fa-location-dot" style="color:var(--gold-primary); width:24px;"></i> JL Tower Boulevard, Davao City</p>
+          <p style="color:var(--text-muted);"><i class="fa-solid fa-clock" style="color:var(--gold-primary); width:24px;"></i> Check-In: 2:00 PM | Check-Out: 12:00 PM</p>
+        </div>
+
+        <div class="glass-card">
+          <form onsubmit="handleContactSubmit(event)">
+            <div class="form-group">
+              <label>Your Name</label>
+              <input type="text" class="form-control" required placeholder="John Doe">
+            </div>
+            <div class="form-group">
+              <label>Message</label>
+              <textarea class="form-control" rows="3" required placeholder="How may we assist you?"></textarea>
+            </div>
+            <button type="submit" class="btn btn-gold" style="width:100%;">Send Message</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-about">
+          <div class="logo">
+            <div class="logo-badge">JL</div>
+            <span>JL'S HOTEL</span>
+          </div>
+          <p>"Where Every Stay Becomes a Story." Experience luxury, warmth, and refined elegance.</p>
+          <p><i class="fa-solid fa-phone"></i> Direct Line: 09151897504</p>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Navigation</h4>
+          <ul class="footer-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#rooms">Rooms & Suites</a></li>
+            <li><a href="#dining">Dining</a></li>
+            <li><a href="#spa">Spa & Wellness</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Guest Services</h4>
+          <ul class="footer-links">
+            <li><a href="#services">24/7 Concierge</a></li>
+            <li><a href="#events">Weddings & Events</a></li>
+            <li><a href="#my-stay" class="auth-required-nav" style="display:none;">My Stay Portal</a></li>
+            <li><a href="#history" class="auth-required-nav" style="display:none;">Digital History Book</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Follow JL's Hotel</h4>
+          <div style="display:flex; gap:12px; margin-top:10px;">
+            <a href="#" class="icon-btn"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" class="icon-btn"><i class="fa-brands fa-facebook"></i></a>
+            <a href="#" class="icon-btn"><i class="fa-brands fa-tripadvisor"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 JL's Hotel. All Rights Reserved. Luxury Hospitality & Guest Management Platform.</p>
+        <p>Contact Concierge: 09151897504</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+     MODALS SETUP (AUTH, BOOKING, PAYMENT, SEARCH, ROOM SERVICE, LIGHTBOX)
+     ========================================================================== -->
+
+  <!-- AUTHENTICATION MODAL -->
+  <div class="modal-overlay" id="auth-modal">
+    <div class="modal-card">
+      <div class="modal-close" onclick="closeModal('auth-modal')"><i class="fa-solid fa-xmark"></i></div>
+      
+      <div class="text-center" style="margin-bottom: 24px;">
+        <div class="logo-badge" style="margin: 0 auto 10px auto;">JL</div>
+        <h3 class="section-title gold-gradient-text" style="font-size: 1.8rem;" id="auth-modal-title">Sign In</h3>
+        <p style="color:var(--text-muted); font-size:0.85rem;" id="auth-modal-subtitle">Access your personal guest stay history and luxury privileges.</p>
+      </div>
+
+      <!-- Login Form -->
+      <form id="login-form" onsubmit="handleLoginSubmit(event)">
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" class="form-control" id="login-email" required placeholder="guest@example.com">
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" class="form-control" id="login-password" required placeholder="••••••••">
+        </div>
+        <button type="submit" class="btn btn-gold" style="width: 100%; margin-top: 10px;">Login</button>
+        <p class="text-center" style="margin-top: 16px; font-size: 0.85rem; color: var(--text-muted);">
+          Don't have an account? <a href="#" style="color:var(--gold-primary); font-weight:600;" onclick="switchAuthTab('register')">Create Account</a>
+        </p>
+      </form>
+
+      <!-- Registration Form -->
+      <form id="register-form" style="display:none;" onsubmit="handleRegisterSubmit(event)">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" class="form-control" id="reg-name" required placeholder="Mr. / Ms. Guest Name">
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" class="form-control" id="reg-email" required placeholder="guest@example.com">
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" class="form-control" id="reg-phone" required placeholder="0915XXXXXXX">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" class="form-control" id="reg-password" required placeholder="••••••••">
+          </div>
+          <div class="form-group">
+            <label>Confirm Password</label>
+            <input type="password" class="form-control" id="reg-confirm" required placeholder="••••••••">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-gold" style="width: 100%; margin-top: 10px;">Create Account</button>
+        <p class="text-center" style="margin-top: 16px; font-size: 0.85rem; color: var(--text-muted);">
+          Already registered? <a href="#" style="color:var(--gold-primary); font-weight:600;" onclick="switchAuthTab('login')">Sign In</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <!-- RESERVATION MODAL -->
+  <div class="modal-overlay" id="booking-modal">
+    <div class="modal-card" style="max-width: 680px;">
+      <div class="modal-close" onclick="closeModal('booking-modal')"><i class="fa-solid fa-xmark"></i></div>
+      
+      <h3 class="section-title gold-gradient-text" style="font-size: 1.8rem;">Complete Your Reservation</h3>
+      <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom: 20px;">JL's Hotel — Bespoke Guest Reservation</p>
+
+      <form id="reservation-form" onsubmit="handleReservationSubmit(event)">
+        <div id="booking-room-summary" class="glass-card" style="padding:16px; margin-bottom:20px; display:flex; gap:16px; align-items:center;">
+          <!-- Injected via JS -->
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Check-In Date</label>
+            <input type="date" class="form-control" id="book-checkin" required onchange="calculateBookingCosts()">
+          </div>
+          <div class="form-group">
+            <label>Check-Out Date</label>
+            <input type="date" class="form-control" id="book-checkout" required onchange="calculateBookingCosts()">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Number of Guests</label>
+            <select class="form-control" id="book-guests" onchange="calculateBookingCosts()">
+              <option value="1">1 Guest</option>
+              <option value="2" selected>2 Guests</option>
+              <option value="3">3 Guests</option>
+              <option value="4">4 Guests</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Number of Rooms</label>
+            <input type="number" class="form-control" id="book-num-rooms" value="1" min="1" max="5" required onchange="calculateBookingCosts()">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Special Requests</label>
+          <textarea class="form-control" id="book-requests" rows="2" placeholder="High floor, extra pillows, champagne, etc."></textarea>
+        </div>
+
+        <!-- LIVE CALCULATION BREAKDOWN -->
+        <div class="glass-card" style="padding: 16px; margin-bottom: 20px; background: rgba(0,0,0,0.3);">
+          <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:0.9rem;">
+            <span style="color:var(--text-muted);">Nights:</span>
+            <span id="calc-nights">1 Night</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:0.9rem;">
+            <span style="color:var(--text-muted);">Room Subtotal:</span>
+            <span id="calc-subtotal">₱0</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:0.9rem;">
+            <span style="color:var(--text-muted);">Taxes & Fees (12% Tax, 10% Service):</span>
+            <span id="calc-taxes">₱0</span>
+          </div>
+          <hr style="border:none; border-top: 1px solid var(--border-dark); margin: 10px 0;">
+          <div style="display:flex; justify-content:space-between; font-weight:700; font-size:1.1rem; color:var(--gold-light);">
+            <span>Grand Total:</span>
+            <span id="calc-total">₱0</span>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-gold" style="width: 100%;">Create Temporary Reservation</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- PAYMENT MODAL -->
+  <div class="modal-overlay" id="payment-modal">
+    <div class="modal-card">
+      <div class="modal-close" onclick="closeModal('payment-modal')"><i class="fa-solid fa-xmark"></i></div>
+      
+      <span class="section-subtitle">Secure Gateway</span>
+      <h3 class="section-title gold-gradient-text" style="font-size: 1.8rem;">Complete Room Payment</h3>
+      <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom: 20px;">Complete payment before the 9-hour hold timer expires.</p>
+
+      <form id="payment-form" onsubmit="handlePaymentSubmit(event)">
+        <div class="form-group">
+          <label>Select Payment Method</label>
+          <select class="form-control" id="pay-method" required>
+            <option value="GCash">GCash E-Wallet</option>
+            <option value="Credit/Debit Card">Credit / Debit Card (Visa/MasterCard)</option>
+            <option value="Bank Transfer">Direct Bank Transfer</option>
+            <option value="Pay at Hotel">Pay at Hotel Front Desk</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Account / Reference Name</label>
+          <input type="text" class="form-control" required placeholder="Name on account">
+        </div>
+
+        <div class="form-group">
+          <label>Total Amount to Pay</label>
+          <input type="text" class="form-control" id="pay-modal-amount" readonly style="font-weight:700; color:var(--gold-light);">
+        </div>
+
+        <button type="submit" class="btn btn-gold" style="width: 100%; margin-top: 10px;">Confirm & Authorize Stay</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- IN-ROOM DINING / ROOM SERVICE CART MODAL -->
+  <div class="modal-overlay" id="room-service-modal">
+    <div class="modal-card" style="max-width: 650px;">
+      <div class="modal-close" onclick="closeModal('room-service-modal')"><i class="fa-solid fa-xmark"></i></div>
+      
+      <span class="section-subtitle">In-Room Culinary Service</span>
+      <h3 class="section-title gold-gradient-text" style="font-size: 1.8rem;">Room Service Menu</h3>
+
+      <div style="display:flex; flex-direction:column; gap:16px; margin: 20px 0;" id="room-service-menu-items">
+        <!-- Injected via JS -->
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border-dark); padding-top:16px;">
+        <div>
+          <span style="color:var(--text-muted); font-size:0.85rem;">Cart Total:</span>
+          <p id="cart-total-price" style="font-family:var(--font-serif); font-weight:700; font-size:1.4rem; color:var(--gold-light);">₱0</p>
+        </div>
+        <button class="btn btn-gold" onclick="submitRoomServiceOrder()">Submit Order</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIGHTBOX MODAL -->
+  <div class="lightbox-modal" id="lightbox-modal" onclick="closeLightbox()">
+    <img src="" alt="Enlarged View" class="lightbox-content" id="lightbox-img">
+  </div>
+
+  <!-- GLOBAL SEARCH MODAL -->
+  <div class="modal-overlay" id="search-modal">
+    <div class="modal-card">
+      <div class="modal-close" onclick="closeModal('search-modal')"><i class="fa-solid fa-xmark"></i></div>
+      <h3 class="section-title gold-gradient-text" style="font-size: 1.6rem; margin-bottom:20px;">Search JL's Hotel</h3>
+      <input type="text" class="form-control" id="global-search-input" placeholder="Search rooms, dining, spa, or services..." onkeyup="handleGlobalSearch()">
+      <div id="search-results-box" style="margin-top:20px; max-height:300px; overflow-y:auto;"></div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+     VANILLA JAVASCRIPT LOGIC (STATE MANAGEMENT & INTERACTIVITY)
+     ========================================================================== -->
+  <script>
+    /* ==========================================================================
+       1. DATA MODELS & INITIAL DATA STORES
+       ========================================================================== */
+    const ROOMS_DATA = [
+      { id: 'r1', name: 'Deluxe King Room', category: 'Deluxe', price: 4500, guests: 2, bed: '1 King Bed', size: '42 sqm', view: 'Garden View', image: 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=800&q=80', amenities: ['Free Wi-Fi', 'Balcony', 'Mini Bar', 'Marble Bath'] },
+      { id: 'r2', name: 'Deluxe Twin Room', category: 'Deluxe', price: 4800, guests: 2, bed: '2 Twin Beds', size: '45 sqm', view: 'City Skyline View', image: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80', amenities: ['Free Wi-Fi', 'Work Desk', 'Smart TV', 'Rain Shower'] },
+      { id: 'r3', name: 'Premium King Room', category: 'Premium', price: 5500, guests: 2, bed: '1 Grand King', size: '50 sqm', view: 'Partial Ocean View', image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80', amenities: ['Free Wi-Fi', 'Nespresso Bar', 'Private Lounge Access'] },
+      { id: 'r4', name: 'Executive Room', category: 'Executive', price: 6000, guests: 2, bed: '1 King Bed', size: '55 sqm', view: 'Panoramic Horizon', image: 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=800&q=80', amenities: ['Butler Service', 'Cocktail Hour', 'Executive Desk'] },
+      { id: 'r5', name: 'Executive Suite', category: 'Suites', price: 6500, guests: 3, bed: '1 Super King + Sofa', size: '68 sqm', view: 'Oceanfront View', image: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=800&q=80', amenities: ['Living Room', 'Deep Soaking Tub', 'Walk-in Closet'] },
+      { id: 'r6', name: 'Family Room', category: 'Family', price: 7000, guests: 4, bed: '2 Queen Beds', size: '72 sqm', view: 'Resort Pool View', image: 'https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&w=800&q=80', amenities: ['Kids Play Corner', 'Dual Vanity', 'Balcony'] },
+      { id: 'r7', name: 'Garden Suite', category: 'Suites', price: 7500, guests: 3, bed: '1 King Bed', size: '80 sqm', view: 'Private Botanical Garden', image: 'https://images.unsplash.com/photo-1608198399988-341f712c3711?auto=format&fit=crop&w=800&q=80', amenities: ['Private Terrace', 'Plunge Pool', 'Butler Service'] },
+      { id: 'r8', name: 'Ocean View Suite', category: 'Suites', price: 8500, guests: 3, bed: '1 Master King', size: '90 sqm', view: 'Unobstructed Ocean View', image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=800&q=80', amenities: ['Private Jacuzzi', 'Sunset Deck', 'Premium Champagne'] },
+      { id: 'r9', name: 'Family Villa', category: 'Villas', price: 10000, guests: 6, bed: '3 King Beds', size: '130 sqm', view: 'Private Lagoon View', image: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=80', amenities: ['Private Dining Pavilion', 'Personal Chef On-Call'] },
+      { id: 'r10', name: 'Honeymoon Suite', category: 'Suites', price: 10500, guests: 2, bed: '1 Canopy King Bed', size: '95 sqm', view: 'Secluded Beach View', image: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=800&q=80', amenities: ['Rose Petal Turndown', 'Couples Spa Session', 'Private Dining'] },
+      { id: 'r11', name: 'Presidential Suite', category: 'Suites', price: 12000, guests: 4, bed: '2 Master Suites', size: '160 sqm', view: '360° Coastal View', image: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=800&q=80', amenities: ['Grand Piano', 'Private Sauna', 'Dedicated Butler'] },
+      { id: 'r12', name: 'Royal Villa', category: 'Villas', price: 15000, guests: 8, bed: '4 Royal Suites', size: '250 sqm', view: 'Private Ocean Cliffside', image: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=80', amenities: ['Private Helipad Access', 'Infinity Pool', '24/7 Chef & Butler'] }
+    ];
+
+    const ROOM_SERVICE_ITEMS = [
+      { id: 'f1', name: 'Wagyu Beef Burger & Truffle Fries', price: 950, cat: 'Main Course' },
+      { id: 'f2', name: 'Grilled Lobster Tail with Herb Butter', price: 1850, cat: 'Main Course' },
+      { id: 'f3', name: 'Traditional Artisan Breakfast Set', price: 650, cat: 'Breakfast' },
+      { id: 'f4', name: 'Decadent Valrhona Chocolate Fondant', price: 420, cat: 'Desserts' },
+      { id: 'f5', name: 'Vintage Dom Pérignon Champagne (750ml)', price: 14500, cat: 'Drinks' }
+    ];
+
+    // GLOBAL APP STATE
+    let currentUser = JSON.parse(localStorage.getItem('jlHotelCurrentUser')) || null;
+    let selectedRoomForBooking = null;
+    let cart = [];
+    let countdownInterval = null;
+
+    /* ==========================================================================
+       2. INITIALIZATION & EVEN LISTENERS
+       ========================================================================== */
+    document.addEventListener('DOMContentLoaded', () => {
+      initParticlesCanvas();
+      setupHeaderScroll();
+      setupHeroSlider();
+      updateAuthUI();
+      renderRooms();
+      checkActiveStayAndTimers();
+      
+      // Default Date Inputs in Hero & Booking
+      const today = new Date().toISOString().split('T')[0];
+      const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+      if (document.getElementById('hero-checkin')) {
+        document.getElementById('hero-checkin').value = today;
+        document.getElementById('hero-checkout').value = tomorrow;
+      }
+
+      // Mobile Hamburger Listeners
+      const hamburger = document.getElementById('hamburger-btn');
+      const mobileNav = document.getElementById('mobile-nav-drawer');
+      const mobileClose = document.getElementById('mobile-nav-close');
+      
+      hamburger.addEventListener('click', () => mobileNav.classList.add('active'));
+      mobileClose.addEventListener('click', () => mobileNav.classList.remove('active'));
+      
+      document.querySelectorAll('.mobile-link').forEach(link => {
+        link.addEventListener('click', () => mobileNav.classList.remove('active'));
+      });
+
+      // Category Filter Listeners
+      document.querySelectorAll('#room-category-filters .filter-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          document.querySelectorAll('#room-category-filters .filter-btn').forEach(b => b.classList.remove('active'));
+          e.target.classList.add('active');
+          renderRooms();
+        });
+      });
+    });
+
+    /* Header Background Transition on Scroll */
+    function setupHeaderScroll() {
+      const header = document.getElementById('main-header');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 60) {
+          header.classList.add('scrolled');
+        } else {
+          header.classList.remove('scrolled');
+        }
+      });
+    }
+
+    /* Animated Hero Image Background Loop */
+    function setupHeroSlider() {
+      const slides = document.querySelectorAll('.hero-slide');
+      let index = 0;
+      setInterval(() => {
+        slides[index].classList.remove('active');
+        index = (index + 1) % slides.length;
+        slides[index].classList.add('active');
+      }, 6000);
+    }
+
+    /* Ambient Gold Particle Physics Canvas */
+    function initParticlesCanvas() {
+      const canvas = document.getElementById('bg-particles-canvas');
+      const ctx = canvas.getContext('2d');
+      let width = canvas.width = window.innerWidth;
+      let height = canvas.height = window.innerHeight;
+
+      window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      });
+
+      const particles = Array.from({ length: 45 }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        radius: Math.random() * 2 + 0.5,
+        alpha: Math.random() * 0.5 + 0.1,
+        speedY: -Math.random() * 0.4 - 0.1,
+        speedX: Math.random() * 0.2 - 0.1
+      }));
+
+      function animate() {
+        ctx.clearRect(0, 0, width, height);
+        particles.forEach(p => {
+          p.y += p.speedY;
+          p.x += p.speedX;
+          if (p.y < 0) p.y = height;
+          if (p.x < 0 || p.x > width) p.x = Math.random() * width;
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(212, 175, 55, ${p.alpha})`;
+          ctx.fill();
+        });
+        requestAnimationFrame(animate);
+      }
+      animate();
+    }
+
+    /* Theme Toggle Switch */
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      document.body.classList.toggle('light-mode');
+      const isLight = document.body.classList.contains('light-mode');
+      document.getElementById('theme-toggle').innerHTML = isLight ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
+      localStorage.setItem('jlHotelTheme', isLight ? 'light' : 'dark');
+    });
+
+    /* Scroll Utility */
+    function scrollToSection(id) {
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    }
+
+    /* Toast Notification Trigger */
+    function showToast(title, message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.innerHTML = `
+        <div style="font-size:1.4rem; color:var(--gold-primary);"><i class="fa-solid fa-circle-check"></i></div>
+        <div>
+          <h4 style="font-family:var(--font-serif); font-size:1rem; margin-bottom:2px;">${title}</h4>
+          <p style="font-size:0.85rem; color:var(--text-muted);">${message}</p>
+        </div>
+      `;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(100%)';
+        setTimeout(() => toast.remove(), 400);
+      }, 4000);
+    }
+
+    /* ==========================================================================
+       3. AUTHENTICATION & USER SESSION ENGINE
+       ========================================================================== */
+    function updateAuthUI() {
+      const navContainer = document.getElementById('nav-auth-container');
+      const mobileContainer = document.getElementById('mobile-auth-container');
+      const authNavItems = document.querySelectorAll('.auth-required-nav');
+
+      if (currentUser) {
+        const firstName = currentUser.name.split(' ')[0];
+        navContainer.innerHTML = `
+          <div style="display:flex; align-items:center; gap:10px;">
+            <a href="#my-account" class="btn btn-outline btn-sm">
+              <i class="fa-solid fa-user"></i> Hi, ${firstName}
+            </a>
+          </div>
+        `;
+        mobileContainer.innerHTML = `
+          <a href="#my-account" class="btn btn-outline" style="width:100%; text-align:center;">Hi, ${firstName} (My Account)</a>
+        `;
+        authNavItems.forEach(el => el.style.display = 'block');
+        document.getElementById('my-account').style.display = 'block';
+        document.getElementById('profile-name').value = currentUser.name;
+        document.getElementById('profile-phone').value = currentUser.phone;
+        document.getElementById('account-display-name').innerText = currentUser.name;
+        document.getElementById('account-display-email').innerText = currentUser.email;
+        document.getElementById('account-avatar-initials').innerText = currentUser.name.substring(0,2).toUpperCase();
+        
+        renderHistoryBook();
+      } else {
+        navContainer.innerHTML = `<button class="btn btn-outline btn-sm" onclick="openAuthModal('login')">Sign In</button>`;
+        mobileContainer.innerHTML = `<button class="btn btn-gold" style="width:100%;" onclick="openAuthModal('login')">Sign In / Register</button>`;
+        authNavItems.forEach(el => el.style.display = 'none');
+        document.getElementById('my-account').style.display = 'none';
+        document.getElementById('my-stay').style.display = 'none';
+        document.getElementById('history').style.display = 'none';
+      }
+    }
+
+    function openAuthModal(tab = 'login') {
+      switchAuthTab(tab);
+      openModal('auth-modal');
+    }
+
+    function switchAuthTab(tab) {
+      if (tab === 'login') {
+        document.getElementById('auth-modal-title').innerText = 'Sign In';
+        document.getElementById('login-form').style.display = 'block';
+        document.getElementById('register-form').style.display = 'none';
+      } else {
+        document.getElementById('auth-modal-title').innerText = 'Create Account';
+        document.getElementById('login-form').style.display = 'none';
+        document.getElementById('register-form').style.display = 'block';
+      }
+    }
+
+    function requireLoginGuard(actionCallback) {
+      if (!currentUser) {
+        showToast('Login Required', 'Please log in to your JL\'s Hotel account to proceed.', 'info');
+        openAuthModal('login');
+        return false;
+      }
+      return true;
+    }
+
+    function handleLoginSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const users = JSON.parse(localStorage.getItem('jlHotelUsers')) || [];
+      const user = users.find(u => u.email === email);
+
+      if (user) {
+        currentUser = user;
+        localStorage.setItem('jlHotelCurrentUser', JSON.stringify(user));
+        updateAuthUI();
+        closeModal('auth-modal');
+        showToast('Welcome Back', `Welcome back to JL's Hotel, ${user.name}!`);
+        checkActiveStayAndTimers();
+      } else {
+        // Auto register fallback for demo ease
+        const newUser = { id: 'u_' + Date.now(), name: email.split('@')[0], email: email, phone: '09151897504' };
+        users.push(newUser);
+        localStorage.setItem('jlHotelUsers', JSON.stringify(users));
+        currentUser = newUser;
+        localStorage.setItem('jlHotelCurrentUser', JSON.stringify(newUser));
+        updateAuthUI();
+        closeModal('auth-modal');
+        showToast('Account Initialized', `Welcome to JL's Hotel, ${newUser.name}!`);
+        checkActiveStayAndTimers();
+      }
+    }
+
+    function handleRegisterSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('reg-name').value;
+      const email = document.getElementById('reg-email').value;
+      const phone = document.getElementById('reg-phone').value;
+      const pass = document.getElementById('reg-password').value;
+      const confirm = document.getElementById('reg-confirm').value;
+
+      if (pass !== confirm) {
+        showToast('Password Error', 'Passwords do not match.', 'error');
+        return;
+      }
+
+      const users = JSON.parse(localStorage.getItem('jlHotelUsers')) || [];
+      const newUser = { id: 'u_' + Date.now(), name, email, phone };
+      users.push(newUser);
+      localStorage.setItem('jlHotelUsers', JSON.stringify(users));
+
+      currentUser = newUser;
+      localStorage.setItem('jlHotelCurrentUser', JSON.stringify(newUser));
+      updateAuthUI();
+      closeModal('auth-modal');
+      showToast('Registration Successful', `Welcome to JL's Hotel, ${name}!`);
+      checkActiveStayAndTimers();
+    }
+
+    function handleProfileUpdate(e) {
+      e.preventDefault();
+      currentUser.name = document.getElementById('profile-name').value;
+      currentUser.phone = document.getElementById('profile-phone').value;
+      localStorage.setItem('jlHotelCurrentUser', JSON.stringify(currentUser));
+      updateAuthUI();
+      showToast('Profile Updated', 'Your guest account details have been saved.');
+    }
+
+    function logoutUser() {
+      currentUser = null;
+      localStorage.removeItem('jlHotelCurrentUser');
+      updateAuthUI();
+      showToast('Logged Out', 'You have been signed out safely.');
+    }
+
+    /* ==========================================================================
+       4. ROOM RENDERING, FILTERING & FAVORITES
+       ========================================================================== */
+    function renderRooms() {
+      const container = document.getElementById('rooms-grid-container');
+      const activeCat = document.querySelector('#room-category-filters .filter-btn.active')?.dataset.cat || 'All';
+      const sortVal = document.getElementById('room-sort').value;
+      const favorites = JSON.parse(localStorage.getItem('jlHotelFavorites')) || [];
+
+      let filtered = ROOMS_DATA.filter(r => activeCat === 'All' || r.category === activeCat);
+
+      if (sortVal === 'low-high') filtered.sort((a,b) => a.price - b.price);
+      if (sortVal === 'high-low') filtered.sort((a,b) => b.price - a.price);
+
+      container.innerHTML = filtered.map(room => {
+        const isFav = favorites.includes(room.id);
+        return `
+          <div class="room-card">
+            <div class="room-image-wrap">
+              <img src="${room.image}" alt="${room.name}" class="room-image">
+              <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite('${room.id}')">
+                <i class="fa-${isFav ? 'solid' : 'regular'} fa-heart"></i>
+              </button>
+              <div class="room-price-badge">
+                <div class="room-price">₱${room.price.toLocaleString()} <span>/ night</span></div>
+              </div>
+            </div>
+            <div class="room-info">
+              <span class="room-category">${room.category} Accommodation</span>
+              <h3 class="room-name">${room.name}</h3>
+              <div class="room-features">
+                <div class="room-feature-item"><i class="fa-solid fa-user-group"></i> ${room.guests} Guests</div>
+                <div class="room-feature-item"><i class="fa-solid fa-bed"></i> ${room.bed}</div>
+                <div class="room-feature-item"><i class="fa-solid fa-ruler-combined"></i> ${room.size}</div>
+                <div class="room-feature-item"><i class="fa-solid fa-mountain-sun"></i> ${room.view}</div>
+              </div>
+              <div class="room-actions">
+                <button class="btn btn-outline btn-sm" onclick="openRoomDetails('${room.id}')">Details</button>
+                <button class="btn btn-gold btn-sm" onclick="startRoomBooking('${room.id}')">Book Now</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleFavorite(roomId) {
+      if (!requireLoginGuard()) return;
+      let favorites = JSON.parse(localStorage.getItem('jlHotelFavorites')) || [];
+      if (favorites.includes(roomId)) {
+        favorites = favorites.filter(id => id !== roomId);
+        showToast('Favorite Removed', 'Room removed from your saved list.');
+      } else {
+        favorites.push(roomId);
+        showToast('Favorite Added', 'Room saved to your favorites.');
+      }
+      localStorage.setItem('jlHotelFavorites', JSON.stringify(favorites));
+      renderRooms();
+    }
+
+    function searchRoomsFromHero() {
+      const checkin = document.getElementById('hero-checkin').value;
+      const checkout = document.getElementById('hero-checkout').value;
+      scrollToSection('rooms');
+      showToast('Searching Rooms', `Finding availability for selected dates (${checkin} to ${checkout}).`);
+    }
+
+    /* ==========================================================================
+       5. BOOKING, 9-HOUR COUNTDOWN & PAYMENT ENGINE
+       ========================================================================== */
+    function triggerBookingFlow() {
+      if (!requireLoginGuard()) return;
+      startRoomBooking(ROOMS_DATA[0].id);
+    }
+
+    function startRoomBooking(roomId) {
+      if (!requireLoginGuard()) return;
+      selectedRoomForBooking = ROOMS_DATA.find(r => r.id === roomId);
+      
+      const summaryBox = document.getElementById('booking-room-summary');
+      summaryBox.innerHTML = `
+        <img src="${selectedRoomForBooking.image}" style="width:100px; height:70px; object-fit:cover; border-radius:8px;">
+        <div>
+          <span style="font-size:0.75rem; color:var(--gold-primary); text-transform:uppercase;">${selectedRoomForBooking.category}</span>
+          <h4 style="font-family:var(--font-serif); font-size:1.1rem;">${selectedRoomForBooking.name}</h4>
+          <p style="font-size:0.85rem; color:var(--text-gold);">₱${selectedRoomForBooking.price.toLocaleString()} / night</p>
+        </div>
+      `;
+
+      const today = new Date().toISOString().split('T')[0];
+      const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+      document.getElementById('book-checkin').value = today;
+      document.getElementById('book-checkout').value = tomorrow;
+
+      calculateBookingCosts();
+      openModal('booking-modal');
+    }
+
+    function calculateBookingCosts() {
+      if (!selectedRoomForBooking) return;
+      
+      const checkinVal = document.getElementById('book-checkin').value;
+      const checkoutVal = document.getElementById('book-checkout').value;
+      const numRooms = parseInt(document.getElementById('book-num-rooms').value) || 1;
+
+      const d1 = new Date(checkinVal);
+      const d2 = new Date(checkoutVal);
+      let nights = Math.ceil((d2 - d1) / (1000 * 60 * 60 * 24));
+      if (nights <= 0) nights = 1;
+
+      const subtotal = selectedRoomForBooking.price * nights * numRooms;
+      const taxes = subtotal * 0.22; // 12% tax + 10% service
+      const total = subtotal + taxes;
+
+      document.getElementById('calc-nights').innerText = `${nights} Night${nights > 1 ? 's' : ''}`;
+      document.getElementById('calc-subtotal').innerText = `₱${subtotal.toLocaleString()}`;
+      document.getElementById('calc-taxes').innerText = `₱${taxes.toLocaleString()}`;
+      document.getElementById('calc-total').innerText = `₱${total.toLocaleString()}`;
+    }
+
+    function handleReservationSubmit(e) {
+      e.preventDefault();
+      closeModal('booking-modal');
+
+      const checkin = document.getElementById('book-checkin').value;
+      const checkout = document.getElementById('book-checkout').value;
+      const numRooms = parseInt(document.getElementById('book-num-rooms').value);
+      const guests = parseInt(document.getElementById('book-guests').value);
+
+      const d1 = new Date(checkin);
+      const d2 = new Date(checkout);
+      let nights = Math.ceil((d2 - d1) / (1000 * 60 * 60 * 24));
+      if (nights <= 0) nights = 1;
+
+      const subtotal = selectedRoomForBooking.price * nights * numRooms;
+      const total = subtotal * 1.22;
+
+      // 9-Hour Expiration Timestamp
+      const expiresAt = Date.now() + (9 * 60 * 60 * 1000);
+
+      const newBooking = {
+        id: 'JL-' + Math.floor(100000 + Math.random() * 900000),
+        userId: currentUser.id,
+        room: selectedRoomForBooking,
+        checkin: checkin,
+        checkout: checkout,
+        nights: nights,
+        rooms: numRooms,
+        guests: guests,
+        total: total,
+        status: 'AWAITING_PAYMENT',
+        paymentExpiresAt: expiresAt,
+        roomNumber: null
+      };
+
+      const bookings = JSON.parse(localStorage.getItem('jlHotelBookings')) || [];
+      bookings.push(newBooking);
+      localStorage.setItem('jlHotelBookings', JSON.stringify(bookings));
+
+      showToast('Temporary Reservation Created', 'Please complete your payment within 9 hours to confirm your stay.');
+      checkActiveStayAndTimers();
+      scrollToSection('my-stay');
+    }
+
+    /* Assign Fictional Room Number based on Room Type */
+    function generateRoomNumber(category) {
+      if (category === 'Deluxe') return 100 + Math.floor(Math.random() * 90 + 1);
+      if (category === 'Executive') return 200 + Math.floor(Math.random() * 90 + 1);
+      if (category === 'Suites') return 300 + Math.floor(Math.random() * 90 + 1);
+      return 400 + Math.floor(Math.random() * 90 + 1); // Villas / Premium
+    }
+
+    function openPaymentForBooking(bookingId) {
+      const bookings = JSON.parse(localStorage.getItem('jlHotelBookings')) || [];
+      const booking = bookings.find(b => b.id === bookingId);
+      if (!booking) return;
+
+      document.getElementById('pay-modal-amount').value = `₱${booking.total.toLocaleString()}`;
+      document.getElementById('payment-form').dataset.bookingId = bookingId;
+      openModal('payment-modal');
+    }
+
+    function handlePaymentSubmit(e) {
+      e.preventDefault();
+      const bookingId = document.getElementById('payment-form').dataset.bookingId;
+      const method = document.getElementById('pay-method').value;
+
+      let bookings = JSON.parse(localStorage.getItem('jlHotelBookings')) || [];
+      let booking = bookings.find(b => b.id === bookingId);
+
+      if (booking) {
+        booking.status = 'CONFIRMED';
+        booking.paymentMethod = method;
+        booking.roomNumber = generateRoomNumber(booking.room.category);
+        localStorage.setItem('jlHotelBookings', JSON.stringify(bookings));
+
+        // Log into Purchase History
+        logPurchaseItem({
+          userId: currentUser.id,
+          type: 'Room Payment',
+          title: `${booking.room.name} (Room ${booking.roomNumber})`,
+          ref: booking.id,
+          date: new Date().toLocaleDateString(),
+          amount: booking.total,
+          method: method
+        });
+
+        closeModal('payment-modal');
+        showToast('Payment Confirmed!', `Your reservation is fully authorized. Assigned Room: ${booking.roomNumber}`);
+        checkActiveStayAndTimers();
+      }
+    }
+
+    /* ==========================================================================
+       6. MY STAY & TIMERS (9-HR PAYMENT & CHECK-IN COUNTDOWNS)
+       ========================================================================== */
+    function checkActiveStayAndTimers() {
+      if (!currentUser) return;
+
+      const bookings = JSON.parse(localStorage.getItem('jlHotelBookings')) || [];
+      const userBookings = bookings.filter(b => b.userId === currentUser.id);
+
+      if (userBookings.length === 0) {
+        document.getElementById('my-stay').style.display = 'none';
+        return;
+      }
+
+      document.getElementById('my-stay').style.display = 'block';
+      const latestBooking = userBookings[userBookings.length - 1];
+      const container = document.getElementById('my-stay-content');
+
+      if (latestBooking.status === 'AWAITING_PAYMENT') {
+        container.innerHTML = `
+          <div class="my-stay-banner">
+            <div class="my-stay-header">
+              <div>
+                <span class="section-subtitle">Reference: ${latestBooking.id}</span>
+                <h3 class="section-title gold-gradient-text">${latestBooking.room.name}</h3>
+              </div>
+              <span class="stay-status-pill status-awaiting">Awaiting Payment</span>
+            </div>
+
+            <div class="my-stay-grid">
+              <div>
+                <p style="margin-bottom:8px;"><i class="fa-solid fa-calendar-check" style="color:var(--gold-primary);"></i> Check-In: ${latestBooking.checkin} (2:00 PM)</p>
+                <p style="margin-bottom:8px;"><i class="fa-solid fa-calendar-xmark" style="color:var(--gold-primary);"></i> Check-Out: ${latestBooking.checkout} (12:00 PM)</p>
+                <p style="margin-bottom:16px;"><i class="fa-solid fa-coins" style="color:var(--gold-primary);"></i> Total Payable: <strong>₱${latestBooking.total.toLocaleString()}</strong></p>
+                <button class="btn btn-gold" onclick="openPaymentForBooking('${latestBooking.id}')">Pay Now to Confirm Stay</button>
+              </div>
+
+              <div class="countdown-box">
+                <p class="countdown-title">9-Hour Payment Countdown Hold</p>
+                <div class="countdown-timer" id="payment-timer-display">
+                  <!-- Timer render -->
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        startPaymentTimer(latestBooking);
+      } else if (latestBooking.status === 'CONFIRMED') {
+        container.innerHTML = `
+          <div class="my-stay-banner">
+            <div class="my-stay-header">
+              <div>
+                <span class="section-subtitle">Reference: ${latestBooking.id}</span>
+                <h3 class="section-title gold-gradient-text">${latestBooking.room.name}</h3>
+              </div>
+              <span class="stay-status-pill status-confirmed">Confirmed Stay</span>
+            </div>
+
+            <div class="my-stay-grid">
+              <div>
+                <p style="margin-bottom:8px;"><i class="fa-solid fa-calendar-check" style="color:var(--gold-primary);"></i> Check-In: ${latestBooking.checkin} at 2:00 PM</p>
+                <p style="margin-bottom:8px;"><i class="fa-solid fa-calendar-xmark" style="color:var(--gold-primary);"></i> Check-Out: ${latestBooking.checkout} at 12:00 PM</p>
+                <div class="room-assigned-card">
+                  <span style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted);">Assigned Suite Number</span>
+                  <div class="room-number-display">Room ${latestBooking.roomNumber}</div>
+                </div>
+              </div>
+
+              <div class="countdown-box">
+                <p class="countdown-title">Check-In Countdown</p>
+                <div class="countdown-timer" id="checkin-timer-display">
+                  <!-- Checkin timer render -->
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        startCheckinTimer(latestBooking);
+      }
+    }
+
+    function startPaymentTimer(booking) {
+      if (countdownInterval) clearInterval(countdownInterval);
+
+      countdownInterval = setInterval(() => {
+        const now = Date.now();
+        const diff = booking.paymentExpiresAt - now;
+
+        if (diff <= 0) {
+          clearInterval(countdownInterval);
+          booking.status = 'EXPIRED';
+          let bookings = JSON.parse(localStorage.getItem('jlHotelBookings')) || [];
+          let idx = bookings.findIndex(b => b.id === booking.id);
+          if (idx !== -1) {
+            bookings[idx].status = 'EXPIRED';
+            localStorage.setItem('jlHotelBookings', JSON.stringify(bookings));
+          }
+          showToast('Hold Expired', 'Your 9-hour hold timer expired. The room has been released.');
+          checkActiveStayAndTimers();
+          return;
+        }
+
+        const hrs = Math.floor(diff / (1000 * 60 * 60));
+        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+        const timerBox = document.getElementById('payment-timer-display');
+        if (timerBox) {
+          timerBox.innerHTML = `
+            <div class="timer-unit"><span class="timer-val">${String(hrs).padStart(2,'0')}</span><span class="timer-lbl">Hours</span></div>
+            <div class="timer-val">:</div>
+            <div class="timer-unit"><span class="timer-val">${String(mins).padStart(2,'0')}</span><span class="timer-lbl">Mins</span></div>
+            <div class="timer-val">:</div>
+            <div class="timer-unit"><span class="timer-val">${String(secs).padStart(2,'0')}</span><span class="timer-lbl">Secs</span></div>
+          `;
+        }
+      }, 1000);
+    }
+
+    function startCheckinTimer(booking) {
+      if (countdownInterval) clearInterval(countdownInterval);
+
+      const targetDate = new Date(`${booking.checkin}T14:00:00`).getTime();
+
+      countdownInterval = setInterval(() => {
+        const now = Date.now();
+        const diff = targetDate - now;
+
+        const timerBox = document.getElementById('checkin-timer-display');
+        if (!timerBox) return;
+
+        if (diff <= 0) {
+          timerBox.innerHTML = `<p style="color:var(--gold-light); font-weight:700;">Welcome! Check-In Is Now Open.</p>`;
+          return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hrs = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+        timerBox.innerHTML = `
+          <div class="timer-unit"><span class="timer-val">${String(days).padStart(2,'0')}</span><span class="timer-lbl">Days</span></div>
+          <div class="timer-val">:</div>
+          <div class="timer-unit"><span class="timer-val">${String(hrs).padStart(2,'0')}</span><span class="timer-lbl">Hours</span></div>
+          <div class="timer-val">:</div>
+          <div class="timer-unit"><span class="timer-val">${String(mins).padStart(2,'0')}</span><span class="timer-lbl">Mins</span></div>
+        `;
+      }, 1000);
+    }
+
+    /* ==========================================================================
+       7. HISTORY BOOK & PURCHASES ARCHIVE
+       ========================================================================== */
+    function logPurchaseItem(item) {
+      let purchases = JSON.parse(localStorage.getItem('jlHotelPurchases')) || [];
+      purchases.push(item);
+      localStorage.setItem('jlHotelPurchases', JSON.stringify(purchases));
+      renderHistoryBook();
+    }
+
+    function filterHistory(type) {
+      document.querySelectorAll('#history-filter-tabs .history-tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+      renderHistoryBook(type);
+    }
+
+    function renderHistoryBook(filterType = 'All') {
+      if (!currentUser) return;
+      document.getElementById('history').style.display = 'block';
+
+      const container = document.getElementById('history-items-container');
+      const bookings = (JSON.parse(localStorage.getItem('jlHotelBookings')) || []).filter(b => b.userId === currentUser.id);
+      const purchases = (JSON.parse(localStorage.getItem('jlHotelPurchases')) || []).filter(p => p.userId === currentUser.id);
+
+      let historyList = [];
+
+      bookings.forEach(b => {
+        historyList.push({
+          type: 'Rooms',
+          title: `${b.room.name} ${b.roomNumber ? '(Room ' + b.roomNumber + ')' : ''}`,
+          meta: `Ref: ${b.id} | ${b.checkin} to ${b.checkout} (${b.nights} Nights)`,
+          price: b.total,
+          status: b.status,
+          icon: 'fa-bed'
+        });
+      });
+
+      purchases.forEach(p => {
+        historyList.push({
+          type: p.type,
+          title: p.title,
+          meta: `Ref: ${p.ref} | Date: ${p.date} | Payment: ${p.method || 'Card'}`,
+          price: p.amount,
+          status: 'COMPLETED',
+          icon: p.type.includes('Spa') ? 'fa-spa' : p.type.includes('Dining') ? 'fa-utensils' : 'fa-bell'
+        });
+      });
+
+      if (filterType !== 'All') {
+        historyList = historyList.filter(item => item.type.toLowerCase().includes(filterType.toLowerCase()));
+      }
+
+      if (historyList.length === 0) {
+        container.innerHTML = `<div class="glass-card text-center" style="color:var(--text-muted);">No journal records found for this category.</div>`;
+        return;
+      }
+
+      container.innerHTML = historyList.map(item => `
+        <div class="history-card">
+          <div class="history-icon-badge"><i class="fa-solid ${item.icon}"></i></div>
+          <div class="history-details">
+            <span style="font-size:0.75rem; color:var(--gold-primary); text-transform:uppercase;">${item.type}</span>
+            <h4>${item.title}</h4>
+            <div class="history-meta">${item.meta}</div>
+          </div>
+          <div>
+            <div class="history-price">₱${item.price.toLocaleString()}</div>
+            <span class="stay-status-pill ${item.status === 'CONFIRMED' || item.status === 'COMPLETED' ? 'status-confirmed' : 'status-awaiting'}" style="font-size:0.7rem; padding:4px 10px;">${item.status}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    /* ==========================================================================
+       8. SERVICES, ROOM SERVICE, SPA & EVENTS HANDLERS
+       ========================================================================== */
+    function openServiceModal(serviceName) {
+      if (!requireLoginGuard()) return;
+      logPurchaseItem({
+        userId: currentUser.id,
+        type: 'Services',
+        title: `Requested: ${serviceName}`,
+        ref: 'SRV-' + Math.floor(1000 + Math.random() * 9000),
+        date: new Date().toLocaleDateString(),
+        amount: 0,
+        method: 'Complimentary'
+      });
+      showToast('Service Request Submitted', `Our concierge team has received your request for ${serviceName}.`);
+    }
+
+    function openDiningReservation(venue) {
+      if (!requireLoginGuard()) return;
+      logPurchaseItem({
+        userId: currentUser.id,
+        type: 'Dining',
+        title: `Table Reservation: ${venue}`,
+        ref: 'DIN-' + Math.floor(1000 + Math.random() * 9000),
+        date: new Date().toLocaleDateString(),
+        amount: 0,
+        method: 'Reserved at Desk'
+      });
+      showToast('Table Reserved', `Your table at ${venue} has been saved into your History Book.`);
+    }
+
+    function openRoomServiceModal() {
+      if (!requireLoginGuard()) return;
+      const container = document.getElementById('room-service-menu-items');
+      container.innerHTML = ROOM_SERVICE_ITEMS.map(item => `
+        <div class="glass-card" style="padding:16px; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <h4 style="font-family:var(--font-serif); font-size:1.05rem;">${item.name}</h4>
+            <p style="color:var(--gold-light); font-weight:700; font-size:0.9rem;">₱${item.price.toLocaleString()}</p>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="addToCart('${item.id}')">Add to Order</button>
+        </div>
+      `).join('');
+      openModal('room-service-modal');
+    }
+
+    function addToCart(itemId) {
+      const item = ROOM_SERVICE_ITEMS.find(i => i.id === itemId);
+      cart.push(item);
+      const total = cart.reduce((sum, i) => sum + i.price, 0);
+      document.getElementById('cart-total-price').innerText = `₱${total.toLocaleString()}`;
+      showToast('Item Added', `${item.name} added to cart.`);
+    }
+
+    function submitRoomServiceOrder() {
+      if (cart.length === 0) {
+        showToast('Empty Cart', 'Please add items to your order first.', 'error');
+        return;
+      }
+      const total = cart.reduce((sum, i) => sum + i.price, 0);
+      logPurchaseItem({
+        userId: currentUser.id,
+        type: 'Room Service',
+        title: `In-Room Order (${cart.length} items)`,
+        ref: 'ORD-' + Math.floor(1000 + Math.random() * 9000),
+        date: new Date().toLocaleDateString(),
+        amount: total,
+        method: 'Charged to Room'
+      });
+      cart = [];
+      closeModal('room-service-modal');
+      showToast('Order Sent', 'Your culinary order is being prepared and delivered to your room.');
+    }
+
+    function openSpaBookingModal(treatment, price) {
+      if (!requireLoginGuard()) return;
+      logPurchaseItem({
+        userId: currentUser.id,
+        type: 'Spa',
+        title: treatment,
+        ref: 'SPA-' + Math.floor(1000 + Math.random() * 9000),
+        date: new Date().toLocaleDateString(),
+        amount: price,
+        method: 'Charged to Room'
+      });
+      showToast('Spa Appointment Booked', `Your appointment for ${treatment} is confirmed.`);
+    }
+
+    function handleEventInquirySubmit(e) {
+      e.preventDefault();
+      if (!requireLoginGuard()) return;
+      const type = document.getElementById('event-type').value;
+      logPurchaseItem({
+        userId: currentUser.id,
+        type: 'Events',
+        title: `Event Inquiry: ${type}`,
+        ref: 'EVT-' + Math.floor(1000 + Math.random() * 9000),
+        date: new Date().toLocaleDateString(),
+        amount: 0,
+        method: 'Inquiry Pending'
+      });
+      showToast('Event Inquiry Received', 'Our event concierges will contact you directly via phone.');
+    }
+
+    function handleContactSubmit(e) {
+      e.preventDefault();
+      showToast('Message Sent', 'Thank you for reaching out to JL\'s Hotel concierge.');
+    }
+
+    /* ==========================================================================
+       9. SEARCH & LIGHTBOX MODAL HELPERS
+       ========================================================================== */
+    document.getElementById('search-trigger').addEventListener('click', () => openModal('search-modal'));
+
+    function handleGlobalSearch() {
+      const query = document.getElementById('global-search-input').value.toLowerCase();
+      const resultsBox = document.getElementById('search-results-box');
+
+      if (!query) {
+        resultsBox.innerHTML = '';
+        return;
+      }
+
+      const matchRooms = ROOMS_DATA.filter(r => r.name.toLowerCase().includes(query) || r.category.toLowerCase().includes(query));
+      resultsBox.innerHTML = matchRooms.map(r => `
+        <div style="padding:10px; border-bottom:1px solid var(--border-dark); cursor:pointer;" onclick="closeModal('search-modal'); scrollToSection('rooms');">
+          <strong style="color:var(--gold-light);">${r.name}</strong> - ₱${r.price.toLocaleString()}/night
+        </div>
+      `).join('');
+    }
+
+    function openLightbox(imgSrc) {
+      document.getElementById('lightbox-img').src = imgSrc;
+      document.getElementById('lightbox-modal').classList.add('active');
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox-modal').classList.remove('active');
+    }
+
+    function openModal(id) {
+      document.getElementById(id).classList.add('active');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+  </script>
+</body>
+</html>
